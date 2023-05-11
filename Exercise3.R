@@ -112,6 +112,32 @@ posmo_filter <- posmo_filter |>
   filter(duration >= as.difftime(5, units = "mins"))
 
 
+# Task 5
+# load and transform the dataset
+pedestrian <- read_csv("data/pedestrian.csv")
+pedestrian <- st_as_sf(pedestrian, coords = c("E", "N"), crs = 2056)
 
+# Explore the trajectories and get an idea of how the pedestrians moved. Plot the trajectories using ggplot.
+
+ggplot() +
+  geom_sf(data = pedestrian, aes(colour = as.factor(TrajID))) +
+  labs(title = "Pedestrian Trajectories",
+       x = "Easting",
+       y = "Northing",
+       colour = "Pedestrian ID") +
+  theme(legend.position = "bottom") +
+  coord_sf()
+
+
+
+ggplot() +
+  geom_sf(data = pedestrian, aes(colour = as.factor(TrajID))) +
+  labs(title = "Pedestrian Trajectories",
+       x = "Easting",
+       y = "Northing",
+       colour = "Pedestrian ID") +
+  theme(legend.position = "bottom") +
+  coord_sf() +
+  facet_wrap(~ TrajID, ncol = 2)
 
 
