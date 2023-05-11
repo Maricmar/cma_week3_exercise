@@ -64,6 +64,23 @@ d <- mean(posmo_filter$stepMean, na.rm = TRUE)
 posmo_filter <- posmo_filter |>
   mutate(static = stepMean < d)
 
+# Task 3:
+
+# Create a ggplot
+
+library(ggplot2)
+
+ggplot(posmo_filter, aes(x = X, y = Y, colour = static)) +
+    geom_path() +
+    geom_point() +
+    coord_equal() +
+    theme(legend.position = "bottom") +
+    labs(title = "Segmented Trajectory",
+              x = "Easting",
+              y = "Northing",
+              colour = "Static")
+
+
 
 
 
