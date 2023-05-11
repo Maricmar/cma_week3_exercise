@@ -141,3 +141,54 @@ ggplot() +
   facet_wrap(~ TrajID, ncol = 2)
 
 
+# Task 6
+library(SimilarityMeasures)
+pedestrian <- read_csv("data/pedestrian.csv")
+trajectories <- split(pedestrian, pedestrian$TrajID)
+trajectory_matrices <- lapply(trajectories, function(traj) {
+  cbind(traj$E, traj$N)
+})
+
+similarity_results <- list()
+
+for (i in 2:length(trajectory_matrices)) {
+  similarity_results[[i - 1]] <- list(
+  DTW = DTW(trajectory_matrices[[1]], trajectory_matrices[[i]]),
+  EditDist = EditDist(trajectory_matrices[[1]], trajectory_matrices[[i]]),
+  Frechet = Frechet(trajectory_matrices[[1]], trajectory_matrices[[i]]),
+  LCSS = LCSS(trajectory_matrices[[1]], trajectory_matrices[[i]],
+  pointSpacing = 1, pointDistance = 1, errorMarg = 0.1)
+  )
+}
+
+names(similarity_results) <- paste("Traj1_vs_Traj", 2:6, sep = "")
+
+similarity_results_df <- do.call(rbind, lapply(similarity_results, as.data.frame))
+similarity_results_df <- cbind(Comparison = rownames(similarity_results_df), similarity_results_df)
+rownames(similarity_results_df) <- NULL
+print(similarity_results_df)
+
+
+
+library(tidyverse)
+
+similarity_results_long <- similarity_results_df %>%
+  gather(key = "Similarity_Measure", value = "Value", -Comparison)
+
+ggplot(similarity_results_long, aes(x = Comparison, y = Value, fill = Similarity_Measure)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Similarity Measures for Pedestrian Trajectories",
+       x = "Trajectory Comparisons",
+       y = "Similarity Measure Value",
+       fill = "Similarity Measure") +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  facet_wrap(~ Similarity_Measure, scales = "free_y")
+
+
+
+
+
+
+
+
