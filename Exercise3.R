@@ -186,8 +186,11 @@ ggplot(similarity_results_long, aes(x = Comparison, y = Value, fill = Similarity
   facet_wrap(~ Similarity_Measure, scales = "free_y")
 
 
+# Expectations based on chart: most similar - 1 to 6
+#                             least similar - 1 to 4
 
-
+# Results from analysis: most similar: 1 to 6 based on DTW, EditDist and LCSS, while Frechet 1 to 2 (expected based on the measure)
+#                       least similar: 1 to3 for all measures.
 
 
 
