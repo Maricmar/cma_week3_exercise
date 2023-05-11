@@ -81,8 +81,35 @@ ggplot(posmo_filter, aes(x = X, y = Y, colour = static)) +
               colour = "Static")
 
 
+#task 4:
 
+rle_id <- function(vec) {
+  x <- rle(vec)$lengths
+  as.factor(rep(seq_along(x), times = x))
+}
 
+posmo_filter <- posmo_filter |>
+  mutate(segment_ID = rle_id(static))
+
+# Visualize the moving segments by colorizing them based on segment_ID.
+
+ggplot(posmo_filter, aes(x = X, y = Y, colour = segment_ID)) +
+  geom_path() +
+  geom_point() +
+  coord_equal() +
+  theme(legend.position = "bottom") +
+  labs(title = "Segmented Trajectory with Unique Segment IDs",
+       x = "Easting",
+       y = "Northing",
+       colour = "Segment ID")
+
+# Determine the duration of each segment and remove short segments
+
+posmo_filter <- posmo_filter |>
+  group_by(segment_ID) |>
+  mutate(duration = max(datetime) - min(datetime)) |>
+  ungroup() |>
+  filter(duration >= as.difftime(5, units = "mins"))
 
 
 
