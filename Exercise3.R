@@ -47,3 +47,27 @@ posmo_filter <- posmo_filter |>
 
 posmo_filter <- posmo_filter |>
     filter(!static)
+
+
+# Task 2: 
+# Explore the stepMean values using summary statistics.
+
+summary(posmo_filter$stepMean)
+hist(posmo_filter$stepMean)
+boxplot(posmo_filter$stepMean)
+
+#  Calculate the mean of all stepMean values and use it as the threshold value d.
+d <- mean(posmo_filter$stepMean, na.rm = TRUE)
+
+# Store the new information in a new column named static.
+
+posmo_filter <- posmo_filter |>
+  mutate(static = stepMean < d)
+
+
+
+
+
+
+
+
